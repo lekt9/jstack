@@ -9,7 +9,7 @@ allowed-tools: ["Bash(${CLAUDE_PLUGIN_ROOT}/scripts/setup-wheel.sh:*)"]
 Run the setup script to activate the 7-step Jesus Loop in this session:
 
 ```!
-"${CLAUDE_PLUGIN_ROOT}/scripts/setup-wheel.sh" $ARGUMENTS
+${CLAUDE_PLUGIN_ROOT}/scripts/setup-wheel.sh $ARGUMENTS
 ```
 
 Once active, every exit attempt is intercepted by the Stop hook. The hook
