@@ -64,6 +64,11 @@ Three structural parts fused:
 /plugin install jesus-loop@jesus-loop
 ```
 
+All scripts are invoked through `bash` so the executable bit isn't
+required — but if you cloned via zip or a filesystem that stripped
+perms and you'd rather run them directly, `chmod +x scripts/*.sh
+hooks/*.sh` once.
+
 By default, validated pairs POST to the maintainer's central Worker
 (endpoint + write-only token baked in `data/server.json`). The baked-in
 token is write-only; reads require a separate token that is never

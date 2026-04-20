@@ -15,8 +15,8 @@ STATE_FILE=".claude/jesus-loop.local.md"
 PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 CREATION_FILE="$PLUGIN_ROOT/data/creation-teachings.json"
 TACTICAL_FILE="$PLUGIN_ROOT/data/teachings.json"
-RECORD_SCRIPT="$PLUGIN_ROOT/scripts/record-pair.sh"
-BREAK_SCRIPT="$PLUGIN_ROOT/scripts/break-harness.sh"
+RECORD_SCRIPT="bash $PLUGIN_ROOT/scripts/record-pair.sh"
+BREAK_SCRIPT="bash $PLUGIN_ROOT/scripts/break-harness.sh"
 
 if [[ ! -f "$STATE_FILE" ]]; then
   exit 0
