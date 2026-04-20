@@ -45,6 +45,11 @@ OUT2=$(run_core codex "$TMP/.codex" beta)
 echo "$OUT2" | jq -r '.reason' | grep -q "ship the codex adapter" \
   && ok "north_star injected when set" || bad "north_star injection" "$(echo "$OUT2" | jq -r .reason | head -5)"
 
+mk_state "$TMP/.codex" omega 0 "auto-detect codex session"
+OUT_AUTO=$(echo '{}' | env JL_PLUGIN_ROOT="$ROOT" JL_STATE_DIR="$TMP/.codex" JL_OUTPUT_FORMAT=codex bash "$ROOT/core/loop.sh")
+echo "$OUT_AUTO" | jq -r '.systemMessage' | grep -q "\[omega\]" \
+  && ok "core auto-detects newest codex session when JL_SESSION unset" || bad "core auto-detect" "$(echo "$OUT_AUTO" | jq -r .systemMessage)"
+
 A=$(sed -n 's/^step: //p' "$TMP/.codex/jesus-loop.alpha.local.md")
 B=$(sed -n 's/^step: //p' "$TMP/.codex/jesus-loop.beta.local.md")
 [[ "$A" == "3" && "$B" == "2" ]] && ok "two sessions advance independently" || bad "session isolation" "alpha=$A beta=$B"
@@ -54,10 +59,10 @@ RAW=$(run_core raw "$TMP/.raw" gamma)
 echo "$RAW" | head -1 | grep -q "Jesus Loop \[session: gamma\]" \
   && ok "raw mode prints plain prompt" || bad "raw mode" "$(echo "$RAW" | head -2)"
 
-if echo '{}' | JL_PLUGIN_ROOT="$ROOT" JL_STATE_DIR="$TMP/.codex" JL_SESSION=zzz JL_OUTPUT_FORMAT=codex bash "$ROOT/core/loop.sh" >/dev/null 2>&1; then
-  bad "missing state should exit nonzero" "exited 0"
+if echo '{}' | JL_PLUGIN_ROOT="$ROOT" JL_STATE_DIR="$TMP/.missing" JL_SESSION=zzz JL_OUTPUT_FORMAT=codex bash "$ROOT/core/loop.sh" >/dev/null 2>&1; then
+  bad "empty state dir should exit nonzero" "exited 0"
 else
-  ok "missing state → exit 1"
+  ok "empty state dir → exit 1"
 fi
 
 echo
@@ -86,6 +91,28 @@ mk_state "$TMP/.codex" eps 1
 OUT3=$(echo '{}' | env JL_PLUGIN_ROOT="$ROOT" JL_STATE_DIR="$TMP/.codex" JL_SESSION=eps bash "$ROOT/adapters/codex/stop-hook.sh")
 echo "$OUT3" | jq -e '.decision == "block"' >/dev/null \
   && ok "adapters/codex/stop-hook.sh emits codex JSON" || bad "codex adapter" "$OUT3"
+
+echo
+echo "== scripts/record-pair.sh =="
+
+mkdir -p "$TMP/record/.codex" "$TMP/plugin/data"
+cat > "$TMP/record/.codex/jesus-loop.theta.local.md" <<'EOF'
+---
+active: true
+step: 1
+started_at: "2026-04-20T00:00:00Z"
+---
+
+Theta task body.
+EOF
+printf '%s\n' '{ "url": "", "write_token": "" }' > "$TMP/plugin/data/server.json"
+REC_OUT=$(cd "$TMP/record" && env JL_PLUGIN_ROOT="$TMP/plugin" JL_STATE_DIR=.codex JL_SESSION=theta bash "$ROOT/scripts/record-pair.sh" --iteration 1 --step 1 --genesis-day light --verse "Genesis 1:3" --label "let there be light" --lesson "x" 2>&1)
+echo "$REC_OUT" | grep -q "no endpoint configured" \
+  && ok "record-pair finds codex state via JL_STATE_DIR/JL_SESSION" || bad "record-pair codex state" "$REC_OUT"
+
+REC_OUT2=$(cd "$TMP/record" && env JL_PLUGIN_ROOT="$TMP/plugin" bash "$ROOT/scripts/record-pair.sh" --iteration 1 --step 1 --genesis-day light --verse "Genesis 1:3" --label "let there be light" --lesson "x" 2>&1)
+echo "$REC_OUT2" | grep -q "no endpoint configured" \
+  && ok "record-pair auto-detects codex state without Claude-only path" || bad "record-pair auto-detect" "$REC_OUT2"
 
 grep -q '"session.stopping"' "$ROOT/adapters/opencode/plugin.ts" \
   && grep -q 'event:' "$ROOT/adapters/opencode/plugin.ts" \

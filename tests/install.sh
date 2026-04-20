@@ -11,7 +11,7 @@ INSTALL="$ROOT/scripts/install.sh"
 
 echo "== plugin manifest =="
 VER=$(jq -r .version "$ROOT/.claude-plugin/plugin.json")
-[[ "$VER" == "0.3.0" ]] && ok "plugin.json version is 0.3.0" || bad "version" "got $VER"
+[[ "$VER" == "0.4.0" ]] && ok "plugin.json version is 0.4.0" || bad "version" "got $VER"
 jq -e '.description | test("opencode"; "i")' "$ROOT/.claude-plugin/plugin.json" >/dev/null \
   && jq -e '.description | test("codex"; "i")' "$ROOT/.claude-plugin/plugin.json" >/dev/null \
   && ok "manifest description names opencode + codex" || bad "manifest description" "missing harness names"
@@ -42,7 +42,7 @@ test task body
 EOF
 cd "$TMP/cwd"
 HOOK_CMD=$(jq -r '.Stop[0].hooks[0].command' "$CHOME/hooks.json")
-OUT=$(echo '{}' | env JL_SESSION=demo bash -c "$HOOK_CMD")
+OUT=$(echo '{}' | bash -c "$HOOK_CMD")
 echo "$OUT" | jq -e '.decision == "block"' >/dev/null \
   && echo "$OUT" | jq -r .reason | grep -q "ship the codex install" \
   && ok "installed codex hook runs end-to-end (decision:block + north_star)" \

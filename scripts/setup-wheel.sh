@@ -70,16 +70,16 @@ EOF
 fi
 
 cat <<EOF
-🕊  Jesus has taken the wheel [session: $SESSION]. Seven Genesis days.
+🕊  Jesus has taken the wheel [session: $SESSION]. Nine Genesis days.
 
 Task:              $PROMPT
 Session:           $SESSION   (state: $STATE_FILE)
-Step:              1/7 (Light)
+Step:              1/9 (Light)
 Completion phrase: $COMPLETION_PROMISE (output only when PROMOTE is TRUE)
 North star:        ${NORTH_STAR:-<unset — set with /steer or scripts/steer.sh>}
 
 Steer mid-flight:
-  bash \${CLAUDE_PLUGIN_ROOT}/scripts/steer.sh --session $SESSION "<new north star>"
+  bash <plugin-root>/scripts/steer.sh --state-dir $STATE_DIR --session $SESSION "<new north star>"
 
 Stop early:        /park --session $SESSION
 Read the sermon:   /sermon --session $SESSION

@@ -70,7 +70,7 @@ JL_PLUGIN_ROOT="$ROOT" bash "$ROOT/scripts/setup-wheel.sh" --state-dir .codex --
   --north-star "near 1:1 port" "ship codex adapter" >/dev/null
 [[ -f .codex/jesus-loop.demo.local.md ]] && ok "setup-wheel --state-dir .codex" || bad "codex setup" "missing"
 
-OUT3=$(echo '{}' | env JL_PLUGIN_ROOT="$ROOT" JL_SESSION=demo bash "$ROOT/adapters/codex/stop-hook.sh")
+OUT3=$(echo '{}' | env JL_PLUGIN_ROOT="$ROOT" bash "$ROOT/adapters/codex/stop-hook.sh")
 echo "$OUT3" | jq -e '.decision == "block"' >/dev/null \
   && ok "codex adapter emits decision:block" || bad "codex adapter" "$OUT3"
 echo "$OUT3" | jq -r .reason | grep -q "near 1:1 port" \

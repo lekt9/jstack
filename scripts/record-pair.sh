@@ -15,7 +15,7 @@ set -euo pipefail
 
 ITERATION=""; STEP=""; GENESIS_DAY=""; HARNESS_WS=""; VERDICT=""
 VERSE=""; LABEL=""; LESSON=""; OUTCOME=""
-PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
+PLUGIN_ROOT="${JL_PLUGIN_ROOT:-${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}}"
 ENV_FILE="$PLUGIN_ROOT/.jesus-loop-env"
 SERVER_JSON="$PLUGIN_ROOT/data/server.json"
 
@@ -42,11 +42,46 @@ for f in ITERATION VERSE LABEL LESSON; do
   fi
 done
 
-STATE=".claude/jesus-loop.local.md"
-if [[ ! -f "$STATE" ]]; then
-  echo "record-pair: no active loop ($STATE); skipping server write." >&2
+resolve_state_file() {
+  local session="${JL_SESSION:-}"
+  local preferred_dir="${JL_STATE_DIR:-}"
+  local dirs=()
+  local dir=""
+
+  [[ -n "$preferred_dir" ]] && dirs+=("$preferred_dir")
+  for dir in .codex .claude .opencode; do
+    [[ "$dir" == "$preferred_dir" ]] && continue
+    dirs+=("$dir")
+  done
+
+  if [[ -n "$session" ]]; then
+    for dir in "${dirs[@]}"; do
+      [[ -f "$dir/jesus-loop.$session.local.md" ]] && {
+        printf '%s\n' "$dir/jesus-loop.$session.local.md"
+        return 0
+      }
+    done
+  fi
+
+  local candidates=()
+  local f=""
+  shopt -s nullglob
+  for dir in "${dirs[@]}"; do
+    for f in "$dir"/jesus-loop.*.local.md; do
+      [[ "$f" == *.teachings.local.md ]] && continue
+      candidates+=("$f")
+    done
+    [[ -f "$dir/jesus-loop.local.md" ]] && candidates+=("$dir/jesus-loop.local.md")
+  done
+
+  [[ ${#candidates[@]} -gt 0 ]] || return 1
+  ls -t "${candidates[@]}" 2>/dev/null | head -1
+}
+
+STATE=$(resolve_state_file) || {
+  echo "record-pair: no active loop state found; skipping server write." >&2
   exit 0
-fi
+}
 
 SESSION_ID=$(sed -n 's/^started_at: *"\(.*\)"/\1/p' "$STATE" | head -1)
 TASK=$(awk '/^---$/{i++; next} i>=2' "$STATE")

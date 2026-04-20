@@ -4,8 +4,8 @@
 # Inputs (env):
 #   JL_PLUGIN_ROOT      — root of the jesus-loop install (data/, scripts/)
 #   JL_STATE_DIR        — dir holding state files (.claude | .codex | .opencode)
-#   JL_SESSION          — session id; allows multiple concurrent loops per repo
-#                         (default: "default"). State path = $JL_STATE_DIR/jesus-loop.$JL_SESSION.local.md
+#   JL_SESSION          — optional session id override. If unset (or missing on disk),
+#                         the newest matching state file in JL_STATE_DIR is used.
 #   JL_OUTPUT_FORMAT    — claude-code | codex | raw     (default: raw)
 #   JL_SYSMSG_FD        — fd to write the system-message line on (raw mode; default 3)
 #
@@ -21,20 +21,48 @@
 set -euo pipefail
 
 JL_STATE_DIR="${JL_STATE_DIR:-.claude}"
-JL_SESSION="${JL_SESSION:-default}"
+JL_SESSION="${JL_SESSION:-}"
 JL_OUTPUT_FORMAT="${JL_OUTPUT_FORMAT:-raw}"
 JL_SYSMSG_FD="${JL_SYSMSG_FD:-3}"
 PLUGIN_ROOT="${JL_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 
-STATE_FILE="$JL_STATE_DIR/jesus-loop.$JL_SESSION.local.md"
-TEACHINGS_FILE="$JL_STATE_DIR/jesus-loop.$JL_SESSION.teachings.local.md"
 CREATION_FILE="$PLUGIN_ROOT/data/creation-teachings.json"
 TACTICAL_FILE="$PLUGIN_ROOT/data/teachings.json"
 RECORD_SCRIPT="bash $PLUGIN_ROOT/scripts/record-pair.sh"
 BREAK_SCRIPT="bash $PLUGIN_ROOT/scripts/break-harness.sh"
 STEER_SCRIPT="bash $PLUGIN_ROOT/scripts/steer.sh"
 
-[[ -f "$STATE_FILE" ]] || exit 1
+resolve_state_file() {
+  local explicit="${JL_SESSION:-}"
+  local pick=""
+  shopt -s nullglob
+
+  if [[ -n "$explicit" ]] && [[ -f "$JL_STATE_DIR/jesus-loop.$explicit.local.md" ]]; then
+    printf '%s\n' "$JL_STATE_DIR/jesus-loop.$explicit.local.md"
+    return 0
+  fi
+
+  local candidates=()
+  local f=""
+  for f in "$JL_STATE_DIR"/jesus-loop.*.local.md; do
+    [[ "$f" == *.teachings.local.md ]] && continue
+    candidates+=("$f")
+  done
+
+  if [[ ${#candidates[@]} -eq 0 ]]; then
+    return 1
+  fi
+
+  pick=$(ls -t "${candidates[@]}" 2>/dev/null | head -1 || true)
+  [[ -n "$pick" ]] || return 1
+  printf '%s\n' "$pick"
+}
+
+STATE_FILE=$(resolve_state_file) || exit 1
+base=$(basename "$STATE_FILE")
+JL_SESSION="${base#jesus-loop.}"
+JL_SESSION="${JL_SESSION%.local.md}"
+TEACHINGS_FILE="$JL_STATE_DIR/jesus-loop.$JL_SESSION.teachings.local.md"
 
 HOOK_INPUT=$(cat || true)
 
@@ -70,7 +98,6 @@ fi
 if [[ -n "$HARNESS_WS" ]] && [[ "$HARNESS_WS" != "null" ]]; then
   NEXT_STEP="$STEP"; PHASE="harness"
 else
-  NEXT_STEP=$((STEP + 1))
   NEXT_STEP=$((STEP + 1))
   if [[ $NEXT_STEP -gt 9 ]]; then NEXT_STEP=9; PHASE="emergence-hold"; else PHASE="step"; fi
 fi
