@@ -1,6 +1,6 @@
 {
   "name": "jesus-loop",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Jesus Take The Wheel — a 7-step Genesis-days loop that builds your thing while citing scripture at every step. Each step injects its structural verse (Genesis day) + a tactical parallel, both KJV-quoted, and requires an element-by-element mapping to the current work state. Optional harness-break escapes any stuck step into a full fib-harness child cycle. Validated (verse, applied-lesson) pairs append to your own Cloudflare D1 via an immutability-enforced Worker.",
   "author": {
     "name": "lekt9"
