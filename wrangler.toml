@@ -6,7 +6,7 @@ compatibility_date = "2026-04-01"
 [[d1_databases]]
 binding = "DB"
 database_name = "jesus-loop"
-database_id = ""
+database_id = "3f2a7a16-7b30-46ce-88dc-4287f25a896a"
 
 # Secrets (set via `wrangler secret put`):
 #   WRITE_TOKEN — required on POST /pairs (send as Authorization: Bearer ...)
