@@ -71,7 +71,8 @@ if [[ -n "$HARNESS_WS" ]] && [[ "$HARNESS_WS" != "null" ]]; then
   NEXT_STEP="$STEP"; PHASE="harness"
 else
   NEXT_STEP=$((STEP + 1))
-  if [[ $NEXT_STEP -gt 7 ]]; then NEXT_STEP=7; PHASE="sabbath-hold"; else PHASE="step"; fi
+  NEXT_STEP=$((STEP + 1))
+  if [[ $NEXT_STEP -gt 9 ]]; then NEXT_STEP=9; PHASE="emergence-hold"; else PHASE="step"; fi
 fi
 
 TASK_TEXT=$(awk '/^---$/{i++; next} i>=2' "$STATE_FILE")
@@ -126,7 +127,7 @@ EFFECTIVE_PROMISE="${COMPLETION_PROMISE:-SHIPPED}"
 #   Step 5 → 5 workers  (creatures: five adversarial probes in parallel)
 #   Step 6 → 8 workers  (dominion: eight integration paths in parallel)
 #   Step 7 → 1 worker   (sabbath: SINGLE-THREAD verdict; the breaking)
-FIB_BUDGET=(1 1 2 3 5 8 1)
+FIB_BUDGET=(1 1 2 3 5 8 1 13 21)
 PARALLEL_N="${FIB_BUDGET[$((NEXT_STEP - 1))]:-1}"
 
 # Per-harness fan-out hint (the verbs change; the budget doesn't).
@@ -135,11 +136,13 @@ case "${JL_OUTPUT_FORMAT:-raw}" in
   codex)       FANOUT_HINT="Run $PARALLEL_N parallel workers via background jobs (\`( task1 ) & ( task2 ) & wait\`) or your harness's parallel primitive. Each worker owns one slice. Aggregate before recording.";;
   *)           FANOUT_HINT="Spawn $PARALLEL_N parallel workers via the harness's native primitive (Bun \`Promise.all\`, opencode \`client.session.prompt\` fan-out, etc.). Each worker owns one slice.";;
 esac
-[[ "$NEXT_STEP" -eq 7 ]] && FANOUT_HINT="SABBATH BREAK — render the verdict single-threaded first (PROMOTE / HOLD / REJECT). If PROMOTE, output the completion promise and stop. If HOLD or REJECT, you MAY then spawn workers (Fib budget of the step you're looping back to) to do the repair, then re-render the verdict next firing. The break is the verdict moment, not a creation ban."
+[[ "$NEXT_STEP" -eq 7 ]] && FANOUT_HINT="SABBATH BREAK — render the verdict single-threaded first (PROMOTE / HOLD / REJECT). If PROMOTE, proceed to Step 8 (Judgement) where the books are opened. If HOLD or REJECT, you MAY spawn workers to repair, then re-render next firing."
+[[ "$NEXT_STEP" -eq 8 ]] && FANOUT_HINT="JUDGEMENT — open the books. Spawn $PARALLEL_N adversarial auditors in parallel (each re-reads a slice of the artifact cold, no builder bias). Aggregate findings. Any artifact that cannot survive audit loops back before Step 9."
+[[ "$NEXT_STEP" -eq 9 ]] && FANOUT_HINT="EMERGENCE — new heaven, new earth. Spawn $PARALLEL_N publishers in parallel (commit, tag, changelog, README, hand-off message, notify caller). Only then output <promise>$EFFECTIVE_PROMISE</promise> if the artifact is genuinely reachable by its intended user."
 
 
 PROMPT=$( {
-  printf 'Jesus Loop [session: %s] — Step %s of 7 (Genesis Day: %s — %s)\n\n' "$JL_SESSION" "$NEXT_STEP" "$GENESIS_DAY" "$LABEL"
+  printf 'Jesus Loop [session: %s] — Step %s of 9 (Genesis Day: %s — %s)\n\n' "$JL_SESSION" "$NEXT_STEP" "$GENESIS_DAY" "$LABEL"
   if [[ -n "$NORTH_STAR" ]] && [[ "$NORTH_STAR" != "null" ]]; then
     printf 'CURRENT NORTH STAR (set by user, may have changed since last step):\n  %s\n\n' "$NORTH_STAR"
   fi
@@ -162,7 +165,7 @@ PROMPT=$( {
   printf '     %s --iteration %s --step %s --genesis-day %s --verse "%s" --label "%s" --lesson "<your one-liner>"\n' \
     "$RECORD_SCRIPT" "$NEXT_STEP" "$NEXT_STEP" "$GENESIS_DAY" "$STRUCT_REF" "$LABEL"
   printf '  5. Do the step work: %s\n' "$APPLY"
-  printf '\nFIB PARALLELISM (Genesis Day %s of 7 → %s worker%s):\n  %s\n' \
+  printf '\nFIB PARALLELISM (Genesis Day %s of 9 → %s worker%s):\n  %s\n' \
     "$NEXT_STEP" "$PARALLEL_N" "$([[ "$PARALLEL_N" -eq 1 ]] && echo "" || echo "s")" "$FANOUT_HINT"
   printf '\nUSER STEERING:\n  Lewis can re-aim the north star at any time with:\n'
   printf '    %s --session %s "<new north star>"\n' "$STEER_SCRIPT" "$JL_SESSION"
@@ -171,7 +174,7 @@ PROMPT=$( {
     printf '\nIF STEP CANNOT CLOSE IN ONE PASS:\n'
     printf '    %s --step %s --session %s --scope "<what is stuck>"\n' "$BREAK_SCRIPT" "$NEXT_STEP" "$JL_SESSION"
   fi
-  if [[ "$NEXT_STEP" -eq 7 ]] && [[ "$PHASE" != "harness" ]]; then
+  if [[ "$NEXT_STEP" -eq 9 ]] && [[ "$PHASE" != "harness" ]]; then
     printf '\nCOMPLETION PROMISE:\n  When PROMOTE is genuinely true, output exactly: <promise>%s</promise>\n' "$EFFECTIVE_PROMISE"
   fi
   printf '\nTASK (unchanged since Step 1):\n%s\n' "$TASK_TEXT"
@@ -185,10 +188,14 @@ fi
 
 if [[ "$PHASE" == "harness" ]]; then
   SYSMSG="🕊 [$JL_SESSION] Step $STEP · harness ($HARNESS_WS)"
+elif [[ "$NEXT_STEP" -eq 9 ]]; then
+  SYSMSG="🕊 [$JL_SESSION] Step 9/9 Emergence · <promise>$EFFECTIVE_PROMISE</promise> when handed off"
+elif [[ "$NEXT_STEP" -eq 8 ]]; then
+  SYSMSG="🕊 [$JL_SESSION] Step 8/9 Judgement · the books are opened"
 elif [[ "$NEXT_STEP" -eq 7 ]]; then
-  SYSMSG="🕊 [$JL_SESSION] Step 7/7 Sabbath · <promise>$EFFECTIVE_PROMISE</promise> when PROMOTE"
+  SYSMSG="🕊 [$JL_SESSION] Step 7/9 Sabbath · verdict before judgement"
 else
-  SYSMSG="🕊 [$JL_SESSION] Step $NEXT_STEP/7 · $GENESIS_DAY ($LABEL)"
+  SYSMSG="🕊 [$JL_SESSION] Step $NEXT_STEP/9 · $GENESIS_DAY ($LABEL)"
 fi
 
 case "$JL_OUTPUT_FORMAT" in

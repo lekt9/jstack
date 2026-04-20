@@ -1,6 +1,6 @@
 # Jesus Take The Wheel
 
-A Claude Code plugin that walks your task through the **seven Genesis days**,
+A Claude Code plugin that walks your task through the **nine Genesis days** (six of creation, sabbath verdict, judgement, and emergence),
 citing scripture verbatim at every step, and posting each validated
 (verse, applied-lesson) pair to an **append-only Cloudflare Worker + D1**.
 
@@ -13,7 +13,7 @@ Three structural parts fused:
 3. **Optional fib-harness break** — when a step can't close in one pass,
    escape to a full 1-1-2-3-5-8 agent investigation scoped to that step.
 
-## The seven days
+## The nine days
 
 | Step | Genesis Day | What it means for the work |
 |------|-------------|----------------------------|
@@ -23,7 +23,9 @@ Three structural parts fused:
 | 4 | Luminaries  | Signals — tests, types, metrics. |
 | 5 | Creatures   | Behavior — edges, adversarial, concurrency. |
 | 6 | Dominion    | Integration — end-to-end flows. |
-| 7 | Sabbath     | Verdict — promote, hold, or reject. |
+| 7 | Sabbath     | Verdict — promote, hold, or reject before judgement. |
+| 8 | Judgement   | The books are opened — adversarial cold audit of every artifact. |
+| 9 | Emergence   | Ship — publish, tag, hand off; <promise>SHIPPED</promise> fires here. |
 
 ## Architecture
 
@@ -119,7 +121,7 @@ Each step, the hook arrives with:
 - the "parallel to your problem" template,
 - and a citation-required reply structure.
 
-Step 7 (Sabbath) is where you render the verdict. Output
+Step 9 (Emergence) is where the artifact ships. Output the completion promise there, not at Sabbath. Output
 `<promise>SHIPPED</promise>` (or the configured phrase) only when
 PROMOTE is genuinely true.
 

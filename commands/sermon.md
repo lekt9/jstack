@@ -6,7 +6,7 @@ allowed-tools: ["Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/sermon.sh:*)"]
 
 # Sermon
 
-Show the teachings gathered across the seven Genesis days. Pass `--session NAME`
+Show the teachings gathered across the nine Genesis days (1–6 creation, 7 sabbath, 8 judgement, 9 emergence). Pass `--session NAME`
 for one session, `--all` for every session in the repo. Default is `--session default`.
 
 !`bash ${CLAUDE_PLUGIN_ROOT}/scripts/sermon.sh $ARGUMENTS`

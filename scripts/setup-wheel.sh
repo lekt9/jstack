@@ -1,5 +1,5 @@
 #!/bin/bash
-# Jesus Take The Wheel — 7-step Genesis-days loop.
+# Jesus Take The Wheel — 9-step Genesis-days loop (1–6 build, 7 sabbath verdict, 8 judgement, 9 emergence).
 # Multi-session aware: pass --session NAME to run multiple loops in one repo.
 set -euo pipefail
 
@@ -13,7 +13,7 @@ while [[ $# -gt 0 ]]; do
   case $1 in
     -h|--help)
       cat <<'HELP_EOF'
-Jesus Take The Wheel — 7 Genesis-day steps with multi-session + live steering.
+Jesus Take The Wheel — 9 Genesis-day steps with multi-session + live steering.
 
 USAGE:
   /take-the-wheel [TASK...] [OPTIONS]
@@ -23,7 +23,7 @@ OPTIONS:
                                  has its own state file and runs independently.
   --north-star "<text>"          Initial north star (re-injected each step).
   --completion-promise '<text>'  Phrase to output as <promise>TEXT</promise>
-                                 when Step 7 verdict is PROMOTE. Default: SHIPPED.
+                                 when Step 9 (Emergence) verdict is SHIP. Default: SHIPPED.
   --state-dir DIR                Where to write state (default: .claude;
                                  use .codex or .opencode for those harnesses).
   -h, --help                     Show this help

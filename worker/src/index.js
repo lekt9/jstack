@@ -50,8 +50,8 @@ async function handlePost(request, env) {
   let step = null;
   if (body.step !== undefined && body.step !== null && body.step !== '') {
     step = Number(body.step);
-    if (!Number.isInteger(step) || step < 1 || step > 7) {
-      return json({ error: 'step must be integer 1..7' }, 400);
+    if (!Number.isInteger(step) || step < 1 || step > 9) {
+      return json({ error: 'step must be integer 1..9' }, 400);
     }
   }
 
@@ -156,7 +156,7 @@ export default {
           'GET /pairs':  'list (Bearer READ_TOKEN; ?verse=, ?session=, ?step=, ?genesis_day=, ?limit=)',
           'GET /pairs/stats': 'rollup (Bearer READ_TOKEN; ?group=verse|day|step)',
         },
-        architecture: '7 Genesis-day steps; harness-break escape; append-only D1',
+        architecture: '9 Genesis-day steps (1-6 creation, 7 sabbath, 8 judgement, 9 emergence); harness-break escape; append-only D1',
         immutability: 'UPDATE/DELETE blocked by DB triggers',
       });
     }

@@ -82,5 +82,29 @@
     "pattern": "Day 7 is the forced stop. The verdict arrives not in more dramatic attempts but in the quiet. What was built across six days is judged; what is good is shipped, what is broken is repaired, what is impossible is named.",
     "problem_map_template": "Stop spawning work. Review the six days of artifacts, signals, behavior, integration. Render a verdict: promote (ship), hold (one thing still incomplete), or reject (scope was wrong — redo).",
     "apply": "Render the verdict. If PROMOTE: output <promise>SHIPPED</promise> (or the configured completion phrase). If HOLD: state the one remaining thing and loop back to the step that produced it. If REJECT: name what failed and why, and propose the next bounded task."
+  },
+  {
+    "step": 8,
+    "genesis_day": "judgement",
+    "label": "the books were opened",
+    "primary_ref": "Revelation 20:12",
+    "primary_quote": "And I saw the dead, small and great, stand before God; and the books were opened: and another book was opened, which is the book of life: and the dead were judged out of those things which were written in the books, according to their works.",
+    "companion_ref": "Daniel 7:10",
+    "companion_quote": "A fiery stream issued and came forth from before him: thousand thousands ministered unto him, and ten thousand times ten thousand stood before him: the judgment was set, and the books were opened.",
+    "pattern": "After sabbath rest comes an adversarial accounting. The books — the actual artifacts, tests, commits, outputs — are opened. Not the intention; the record. What stands on its own evidence is separated from what does not.",
+    "problem_map_template": "Open the books on what Steps 1–7 produced. Read the diff, run the tests once more cold, audit the allowlist, confirm the artifacts match their claims. Adversarial review before emergence.",
+    "apply": "Re-read the actual artifact (diff, file, output) without the builder's eye. List what the evidence confirms, what it does not, and what was claimed but never demonstrated. If anything cannot survive the books, loop it back before Step 9."
+  },
+  {
+    "step": 9,
+    "genesis_day": "emergence",
+    "label": "behold, I make all things new",
+    "primary_ref": "Revelation 21:1",
+    "primary_quote": "And I saw a new heaven and a new earth: for the first heaven and the first earth were passed away; and there was no more sea.",
+    "companion_ref": "Romans 8:19",
+    "companion_quote": "For the earnest expectation of the creature waiteth for the manifestation of the sons of God.",
+    "pattern": "Emergence is not another construction day; it is what comes forth from the completed creation once it is judged and sealed. The new world is the pattern itself becoming usable by others — the artifact leaves the builder's hand.",
+    "problem_map_template": "Deliver the artifact into the world that will use it. Release notes, publish, document, hand off. The work is no longer yours privately; it is the pattern everyone else inherits.",
+    "apply": "Publish or hand off: commit, tag, write the changelog line, update the README or the outward-facing command. Output <promise>SHIPPED</promise> (or the configured phrase) only when the artifact is actually reachable by its intended user."
   }
 ]
