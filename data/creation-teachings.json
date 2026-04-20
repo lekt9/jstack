@@ -1,0 +1,86 @@
+[
+  {
+    "step": 1,
+    "genesis_day": "light",
+    "label": "let there be light",
+    "primary_ref": "Genesis 1:3",
+    "primary_quote": "And God said, Let there be light: and there was light.",
+    "companion_ref": "Luke 14:28",
+    "companion_quote": "For which of you, intending to build a tower, sitteth not down first, and counteth the cost, whether he have sufficient to finish it?",
+    "pattern": "The first divine act is illumination, not construction. The surface is lit before anything is built. To count the cost is to see — to inventory — before laying stones.",
+    "problem_map_template": "Your task is a dark deep. Before building, shine a light: enumerate what exists, what is present, what is absent. Read the repo, the constraints, the prior art. No production yet.",
+    "apply": "Inventory. Read the relevant files, search for prior art, name the constraints. Output a short inventory (≤10 bullets) of what is present and what is missing. Do not implement."
+  },
+  {
+    "step": 2,
+    "genesis_day": "firmament",
+    "label": "divide the waters from the waters",
+    "primary_ref": "Genesis 1:6-7",
+    "primary_quote": "And God said, Let there be a firmament in the midst of the waters, and let it divide the waters from the waters. And God made the firmament, and divided the waters which were under the firmament from the waters which were above the firmament: and it was so.",
+    "companion_ref": "Matthew 9:17",
+    "companion_quote": "Neither do men put new wine into old bottles: else the bottles break, and the wine runneth out, and the bottles perish: but they put new wine into new bottles, and both are preserved.",
+    "pattern": "Day 2 is the first boundary. Above and below are kept distinct so later works can stand on the separation. New wine needs a new skin; right vessel first.",
+    "problem_map_template": "Your task has concerns that must be kept separate. Name the layers, the modules, the interfaces. Pick the vessel that fits the wine — a new one if the old will split.",
+    "apply": "Design the separations. Name the layers / modules / contracts / directories / columns. Write (or update) the shape, not the contents. Short architecture note (≤10 bullets or a diagram)."
+  },
+  {
+    "step": 3,
+    "genesis_day": "land",
+    "label": "let the earth bring forth after his kind",
+    "primary_ref": "Genesis 1:11",
+    "primary_quote": "And God said, Let the earth bring forth grass, the herb yielding seed, and the fruit tree yielding fruit after his kind, whose seed is in itself, upon the earth: and it was so.",
+    "companion_ref": "Matthew 13:31-32",
+    "companion_quote": "The kingdom of heaven is like to a grain of mustard seed, which a man took, and sowed in his field: which indeed is the least of all seeds: but when it is grown, it is the greatest among herbs.",
+    "pattern": "Day 3 is the first day of production. Small seed-bearing things, each after its kind. The mustard seed is tiny but sufficient — a runnable skeleton beats a detailed design.",
+    "problem_map_template": "Produce the first artifacts. Skeletons, stubs, minimal working slices — each seed-bearing (runnable, extendable). Not the whole tree; the seed.",
+    "apply": "Write the minimal working slice. A stub that compiles, a draft that reads, a query that returns. Prove the seed is viable. Commit one concrete artifact this step."
+  },
+  {
+    "step": 4,
+    "genesis_day": "luminaries",
+    "label": "lights for signs and seasons",
+    "primary_ref": "Genesis 1:14",
+    "primary_quote": "And God said, Let there be lights in the firmament of the heaven to divide the day from the night; and let them be for signs, and for seasons, and for days, and years.",
+    "companion_ref": "Matthew 7:24-25",
+    "companion_quote": "Therefore whosoever heareth these sayings of mine, and doeth them, I will liken him unto a wise man, which built his house upon a rock: And the rain descended, and the floods came, and the winds blew, and beat upon that house; and it fell not: for it was founded upon a rock.",
+    "pattern": "Day 4 places signals in the firmament — the instruments of judgement over production. Not production itself; the lights you steer by. The house on rock is the one whose foundations were tested before the storm.",
+    "problem_map_template": "Install the signals. Tests, types, metrics, assertions, lint — falsifiable signs that the artifact from Step 3 stands on rock. If a signal doesn't exist yet, write it.",
+    "apply": "Add one falsifiable check per thing you shipped in Step 3: a unit test, a type, a schema, a regex, a threshold. Run it. It must pass (or the fix must follow before Step 5)."
+  },
+  {
+    "step": 5,
+    "genesis_day": "creatures",
+    "label": "let the waters bring forth abundantly",
+    "primary_ref": "Genesis 1:20",
+    "primary_quote": "And God said, Let the waters bring forth abundantly the moving creature that hath life, and fowl that may fly above the earth in the open firmament of heaven.",
+    "companion_ref": "Luke 15:4",
+    "companion_quote": "What man of you, having an hundred sheep, if he lose one of them, doth not leave the ninety and nine in the wilderness, and go after that which is lost, until he find it?",
+    "pattern": "Day 5 fills with moving, living things — behavior under real conditions. The shepherd leaves ninety-nine for the one lost; a single failing case carries more signal than a crowd of passes.",
+    "problem_map_template": "Exercise the artifact under real behavior: edge cases, adversarial input, concurrency, degraded conditions. Chase the one that fails — it is the sheep worth finding.",
+    "apply": "Run it against the golden path + at least two edges + one adversarial case. If any fail, follow the failing one first; do not cover it with more passes. Fix, then retest."
+  },
+  {
+    "step": 6,
+    "genesis_day": "dominion",
+    "label": "let them have dominion",
+    "primary_ref": "Genesis 1:26",
+    "primary_quote": "And God said, Let us make man in our image, after our likeness: and let them have dominion over the fish of the sea, and over the fowl of the air, and over the cattle, and over all the earth.",
+    "companion_ref": "Matthew 25:21",
+    "companion_quote": "Well done, thou good and faithful servant: thou hast been faithful over a few things, I will make thee ruler over many things: enter thou into the joy of thy lord.",
+    "pattern": "Day 6 grants dominion — integration across the whole created surface. Not another axis, but rulership over every axis before it. Faithful in little compounds into ruler over many.",
+    "problem_map_template": "Test end-to-end. The feature meeting the rest of the system. Real flow: input → artifact → signals → behavior → output. Across the seams that matter.",
+    "apply": "Run one real end-to-end exercise — the full path a user (or caller) would take. Document the result. Any integration break is a blocker for Step 7."
+  },
+  {
+    "step": 7,
+    "genesis_day": "sabbath",
+    "label": "he rested on the seventh day / the verdict",
+    "primary_ref": "Genesis 2:2-3",
+    "primary_quote": "And on the seventh day God ended his work which he had made; and he rested on the seventh day from all his work which he had made. And God blessed the seventh day, and sanctified it: because that in it he had rested from all his work which God created and made.",
+    "companion_ref": "1 Kings 19:11-12",
+    "companion_quote": "And, behold, the LORD passed by, and a great and strong wind rent the mountains, and brake in pieces the rocks before the LORD; but the LORD was not in the wind: and after the wind an earthquake; but the LORD was not in the earthquake: And after the earthquake a fire; but the LORD was not in the fire: and after the fire a still small voice.",
+    "pattern": "Day 7 is the forced stop. The verdict arrives not in more dramatic attempts but in the quiet. What was built across six days is judged; what is good is shipped, what is broken is repaired, what is impossible is named.",
+    "problem_map_template": "Stop spawning work. Review the six days of artifacts, signals, behavior, integration. Render a verdict: promote (ship), hold (one thing still incomplete), or reject (scope was wrong — redo).",
+    "apply": "Render the verdict. If PROMOTE: output <promise>SHIPPED</promise> (or the configured completion phrase). If HOLD: state the one remaining thing and loop back to the step that produced it. If REJECT: name what failed and why, and propose the next bounded task."
+  }
+]

@@ -1,0 +1,15 @@
+{
+  "description": "Jesus Loop stop hook — blocks exit, rotates a teaching from the Bible-Parallel catalog, and re-feeds the task prompt.",
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/stop-hook.sh"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+name = "jesus-loop"
+main = "worker/src/index.js"
+compatibility_date = "2026-04-01"
+
+# `scripts/init-db.sh` fills database_id after creating the D1 database.
+[[d1_databases]]
+binding = "DB"
+database_name = "jesus-loop"
+database_id = ""
+
+# Secrets (set via `wrangler secret put`):
+#   WRITE_TOKEN — required on POST /pairs (send as Authorization: Bearer ...)
+#   READ_TOKEN  — required on GET  /pairs and /pairs/stats (same header)
