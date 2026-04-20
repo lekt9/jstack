@@ -1,0 +1,15 @@
+{
+  "_comment": "Merged into the project's .claude/settings.json by scripts/install.sh so jesus-loop state writes don't trigger permission prompts.",
+  "permissions": {
+    "allow": [
+      "Read(.claude/jesus-loop.*.local.md)",
+      "Edit(.claude/jesus-loop.*.local.md)",
+      "Write(.claude/jesus-loop.*.local.md)",
+      "Bash(test -f .claude/jesus-loop.*:*)",
+      "Bash(rm .claude/jesus-loop.*.local.md)",
+      "Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/*.sh:*)",
+      "Bash(bash ${CLAUDE_PLUGIN_ROOT}/hooks/stop-hook.sh:*)",
+      "Bash(bash ${CLAUDE_PLUGIN_ROOT}/core/loop.sh:*)"
+    ]
+  }
+}

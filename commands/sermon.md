@@ -1,17 +1,16 @@
 ---
-description: "Read back the teachings log from the 7-step loop"
-allowed-tools: ["Bash(test -f .claude/jesus-loop.teachings.local.md:*)", "Read(.claude/jesus-loop.teachings.local.md)"]
+description: "Read back the teachings log from a Jesus Loop session"
+argument-hint: "[--session NAME | --all]"
+allowed-tools: ["Bash(bash ${CLAUDE_PLUGIN_ROOT}/scripts/sermon.sh:*)"]
 ---
 
 # Sermon
 
-Show the user the teachings gathered across the seven Genesis days.
+Show the teachings gathered across the seven Genesis days. Pass `--session NAME`
+for one session, `--all` for every session in the repo. Default is `--session default`.
 
-1. Check if `.claude/jesus-loop.teachings.local.md` exists.
-2. **If not found**: "No teachings yet. Start with `/take-the-wheel`."
-3. **If found**:
-   - Read the file.
-   - Present the per-step list cleanly.
-   - Offer one short synthesis (≤3 sentences): which Genesis day carried
-     the most friction, which tactical parallel showed up more than once,
-     and what that says about the shape of the work.
+!`bash ${CLAUDE_PLUGIN_ROOT}/scripts/sermon.sh $ARGUMENTS`
+
+After printing, offer a short synthesis (≤3 sentences): which Genesis day
+carried the most friction, which tactical parallel showed up more than once,
+and what that says about the shape of the work.

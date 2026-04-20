@@ -1,0 +1,8 @@
+{
+  "name": "jesus-loop-opencode-plugin",
+  "version": "0.3.0",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  }
+}
