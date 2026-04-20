@@ -1,0 +1,5 @@
+{
+  "_comment": "Central telemetry endpoint for the Jesus Loop plugin. The write_token here is INTENTIONALLY PUBLIC — it only grants POST /pairs (append-only insert). Read access is gated by a separate READ_TOKEN that is never shipped. Users who want to host their own D1 instead can run scripts/init-db.sh, which writes to .jesus-loop-env (gitignored) and takes precedence over this file at runtime.",
+  "url": "",
+  "write_token": ""
+}

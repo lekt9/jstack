@@ -3,14 +3,13 @@
 # POST one validated (scripture, applied-lesson) pair to the Jesus Loop
 # Worker. Invoked by the assistant each step.
 #
-# Usage:
-#   record-pair.sh --iteration 5 --step 5 --genesis-day creatures \\
-#                  --verse "Luke 15:4" --label "the one lost sheep" \\
-#                  --lesson "chased the single failing concurrency test" \\
-#                  [--harness-ws /tmp/fib-...] [--verdict promote] [--outcome pass]
+# Endpoint precedence:
+#   1. $PLUGIN_ROOT/.jesus-loop-env   (user's own server, gitignored)
+#   2. $PLUGIN_ROOT/data/server.json  (central telemetry, public in repo)
+#   3. skip silently if neither provides URL + token
 #
-# Reads session_id + task from .claude/jesus-loop.local.md. Reads endpoint
-# + token from $PLUGIN_ROOT/.jesus-loop-env. Fails soft if anything missing.
+# Fails soft: never blocks the loop. A network or auth problem emits a
+# warning to stderr and exits 0.
 
 set -euo pipefail
 
@@ -18,6 +17,7 @@ ITERATION=""; STEP=""; GENESIS_DAY=""; HARNESS_WS=""; VERDICT=""
 VERSE=""; LABEL=""; LESSON=""; OUTCOME=""
 PLUGIN_ROOT="${CLAUDE_PLUGIN_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 ENV_FILE="$PLUGIN_ROOT/.jesus-loop-env"
+SERVER_JSON="$PLUGIN_ROOT/data/server.json"
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -53,21 +53,31 @@ TASK=$(awk '/^---$/{i++; next} i>=2' "$STATE")
 PROJECT_DIR=$(pwd)
 [[ -n "$SESSION_ID" ]] || SESSION_ID="unknown-session"
 
-if [[ ! -f "$ENV_FILE" ]]; then
-  echo "record-pair: $ENV_FILE missing — run $PLUGIN_ROOT/scripts/init-db.sh first. Skipping." >&2
-  exit 0
-fi
-
-# shellcheck disable=SC1090
-set +u; source "$ENV_FILE"; set -u
-
-if [[ -z "${JESUS_LOOP_URL:-}" || -z "${WRITE_TOKEN:-}" ]]; then
-  echo "record-pair: JESUS_LOOP_URL or WRITE_TOKEN not set in $ENV_FILE. Skipping." >&2
-  exit 0
-fi
-
 command -v jq   >/dev/null || { echo "record-pair: jq missing. Skipping." >&2;   exit 0; }
 command -v curl >/dev/null || { echo "record-pair: curl missing. Skipping." >&2; exit 0; }
+
+# Resolve endpoint: env file wins; fall back to committed server.json.
+URL=""
+TOKEN=""
+SOURCE=""
+if [[ -f "$ENV_FILE" ]]; then
+  # shellcheck disable=SC1090
+  set +u; source "$ENV_FILE"; set -u
+  if [[ -n "${JESUS_LOOP_URL:-}" && -n "${WRITE_TOKEN:-}" ]]; then
+    URL="$JESUS_LOOP_URL"; TOKEN="$WRITE_TOKEN"; SOURCE="env"
+  fi
+fi
+if [[ -z "$URL" ]] && [[ -f "$SERVER_JSON" ]]; then
+  CENTRAL_URL=$(jq -r '.url   // ""' "$SERVER_JSON" 2>/dev/null || echo "")
+  CENTRAL_TOK=$(jq -r '.write_token // ""' "$SERVER_JSON" 2>/dev/null || echo "")
+  if [[ -n "$CENTRAL_URL" && -n "$CENTRAL_TOK" ]]; then
+    URL="$CENTRAL_URL"; TOKEN="$CENTRAL_TOK"; SOURCE="central"
+  fi
+fi
+if [[ -z "$URL" ]]; then
+  echo "record-pair: no endpoint configured (neither $ENV_FILE nor $SERVER_JSON). Skipping." >&2
+  exit 0
+fi
 
 PAYLOAD=$(jq -n \
   --arg session_id     "$SESSION_ID" \
@@ -92,8 +102,8 @@ PAYLOAD=$(jq -n \
    + (if $outcome     == "" then {} else {outcome:$outcome} end)')
 
 HTTP_CODE=$(curl -sS -o /tmp/jesus-loop-record.$$ -w '%{http_code}' \
-  -X POST "$JESUS_LOOP_URL/pairs" \
-  -H "Authorization: Bearer $WRITE_TOKEN" \
+  -X POST "$URL/pairs" \
+  -H "Authorization: Bearer $TOKEN" \
   -H 'content-type: application/json' \
   --max-time 10 \
   --data "$PAYLOAD" 2>/dev/null || echo 000)
@@ -103,7 +113,7 @@ rm -f /tmp/jesus-loop-record.$$
 
 if [[ "$HTTP_CODE" == "201" ]]; then
   ID=$(echo "$BODY" | jq -r '.id // "?"' 2>/dev/null || echo "?")
-  echo "✓ Recorded step ${STEP:-?}/${GENESIS_DAY:-?} to $JESUS_LOOP_URL ($VERSE — $LABEL, id=$ID)."
+  echo "✓ Recorded step ${STEP:-?}/${GENESIS_DAY:-?} → $URL ($SOURCE, $VERSE — $LABEL, id=$ID)."
 else
   echo "record-pair: server responded $HTTP_CODE — $BODY. Loop continues." >&2
 fi
