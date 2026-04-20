@@ -1,6 +1,6 @@
 {
   "name": "jesus-loop",
-  "version": "0.3.0",
-  "description": "Jesus Take The Wheel — a 7-step Genesis-days loop with KJV citation at every step. Multi-session per repo, live north-star steering mid-loop, and three harness adapters: Claude Code, OpenAI Codex CLI, and opencode. Each step injects its structural verse + a tactical parallel and requires element-by-element mapping. Validated (verse, applied-lesson) pairs append to your own Cloudflare D1 via an immutability-enforced Worker.",
+  "version": "0.4.0",
+  "description": "Jesus Take The Wheel — a 9-step Genesis-days loop (1–6 creation, 7 sabbath, 8 judgement, 9 emergence) with KJV citation at every step. Multi-session per repo, live north-star steering mid-loop, and three harness adapters: Claude Code, OpenAI Codex CLI, and opencode. Each step injects its structural verse + a tactical parallel and requires element-by-element mapping. Validated (verse, applied-lesson) pairs append to your own Cloudflare D1 via an immutability-enforced Worker.",
   "author": { "name": "lekt9" }
 }
