@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "jesus-loop",
+  "description": "Jesus Take The Wheel — a 7-step Genesis-days loop for Claude Code.",
+  "owner": {
+    "name": "lekt9"
+  },
+  "plugins": [
+    {
+      "name": "jesus-loop",
+      "description": "Jesus Take The Wheel — a 7-step Genesis-days loop that builds your thing while citing scripture at every step.",
+      "category": "workflow",
+      "source": ".",
+      "homepage": "https://github.com/lekt9/jesus-loop"
+    }
+  ]
+}

@@ -58,13 +58,16 @@ Three structural parts fused:
 
 ## Install
 
-```bash
-# Plugin only — by default, validated pairs POST to the maintainer's
-# central Worker (endpoint + write-only token baked in data/server.json).
-# The baked-in token is write-only; reads require a separate token that
-# is never shipped.
-ln -s "$(pwd)" ~/.claude/plugins/jesus-loop
+```text
+# inside Claude Code
+/plugin marketplace add lekt9/jesus-loop        # or a local path: /plugin marketplace add /path/to/jesus-loop
+/plugin install jesus-loop@jesus-loop
 ```
+
+By default, validated pairs POST to the maintainer's central Worker
+(endpoint + write-only token baked in `data/server.json`). The baked-in
+token is write-only; reads require a separate token that is never
+shipped.
 
 ### Run your own server instead (optional)
 
